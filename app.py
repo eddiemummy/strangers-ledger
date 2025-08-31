@@ -1,12 +1,3 @@
-# --------------------------------------------------------------
-# 📚 The Stranger's Ledger (Personal Reading Tracker + LLM Recs)
-# Admin-protected write; public read-only
-# - Read / Reading / Favorite / Tags
-# - Reading progress bar
-# - Cover image upload
-# - LLM recommendations from read books
-# --------------------------------------------------------------
-
 import streamlit as st
 import os, re, json, uuid
 from datetime import datetime
@@ -17,15 +8,11 @@ from config import set_environment
 from model import create_model
 from langchain_core.messages.human import HumanMessage
 
-# -----------------------------
-# Environment & model
-# -----------------------------
+
 set_environment()
 model = create_model()
 
-# -----------------------------
-# Simple "data store"
-# -----------------------------
+
 DATA_FILE = "books_db.json"
 COVER_DIR = "covers"
 
@@ -60,12 +47,12 @@ def _ensure_defaults(book: Dict[str, Any]) -> Dict[str, Any]:
         "id": str(uuid.uuid4()),
         "title": "",
         "author": "",
-        "status": "to_read",  # to_read | reading | read
-        "progress": 0,        # 0..100
+        "status": "to_read",  
+        "progress": 0,       
         "favorite": False,
         "tags": [],
         "cover_path": None,
-        "rating": None,       # 1..10 optional
+        "rating": None,       
         "notes": "",
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "updated_at": datetime.now().isoformat(timespec="seconds"),
@@ -77,15 +64,9 @@ def _ensure_defaults(book: Dict[str, Any]) -> Dict[str, Any]:
         merged["status"] = "read"
     return merged
 
-# -----------------------------
-# UI
-# -----------------------------
 st.set_page_config(page_title="📚 The Stranger's Ledger", layout="wide")
 st.title("📚 The Stranger's Ledger — Reading Tracker & Recommendations")
 
-# -----------------------------
-# Admin login / viewer mode
-# -----------------------------
 with st.sidebar:
     st.subheader("🔐 Admin Login")
     pwd = st.text_input("Password", type="password", placeholder="••••••••")
@@ -104,9 +85,6 @@ if login_btn:
 
 CAN_EDIT = st.session_state.can_edit
 
-# -----------------------------
-# Sidebar: totals & quick filters
-# -----------------------------
 db = _load_db()
 total = len(db)
 reading_cnt = sum(1 for x in db if x["status"] == "reading")
@@ -155,16 +133,10 @@ def _book_card(book: Dict[str, Any]):
         st.caption(f"Created: {book.get('created_at','-')}")
         st.caption(f"Updated: {book.get('updated_at','-')}")
 
-# -----------------------------
-# Tabs
-# -----------------------------
 tab_add, tab_reading, tab_library, tab_reco = st.tabs(
     ["➕ Add / Update Book", "📖 Currently Reading", "📚 Library", "✨ Recommendations"]
 )
 
-# =============================================================
-# ➕ Add / Update Book
-# =============================================================
 with tab_add:
     st.subheader("Add a new book or update an existing one")
 
@@ -255,9 +227,6 @@ with tab_add:
 
                     _save_db(db)
 
-# =============================================================
-# 📖 Currently Reading (update progress)
-# =============================================================
 with tab_reading:
     st.subheader("Currently Reading")
     reading = [b for b in db if b["status"] == "reading"]
@@ -285,9 +254,6 @@ with tab_reading:
             st.progress(b["progress"] / 100)
             st.markdown("---")
 
-# =============================================================
-# 📚 Library (list, filter, quick edit)
-# =============================================================
 with tab_library:
     st.subheader("Library")
     filtered = db[:]
@@ -306,7 +272,6 @@ with tab_library:
         st.info("No results for these filters.")
     else:
         for b in filtered:
-            # Card
             cols_top = st.columns([6, 2])
             with cols_top[0]:
                 colA, colB = st.columns([1, 3])
@@ -381,9 +346,6 @@ with tab_library:
 
             st.markdown("---")
 
-# =============================================================
-# ✨ Recommendations (LLM from read books)
-# =============================================================
 with tab_reco:
     st.subheader("LLM Recommendations from Read Books")
     read_books = [b for b in db if b["status"] == "read"]
@@ -441,8 +403,5 @@ Rules:
                 except Exception as e:
                     st.error(f"Error: {e}")
 
-# --------------------------------------------------------------
-# Footer
-# --------------------------------------------------------------
 st.markdown("---")
 st.caption("📚 Crafted by a Reader-Friendly LLM Assistant — The Stranger's Ledger")
