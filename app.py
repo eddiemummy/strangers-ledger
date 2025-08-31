@@ -3,7 +3,6 @@ import os, re, json, uuid
 from datetime import datetime
 from typing import List, Dict, Any
 
-# LLM (Gemini + LangChain)
 from config import set_environment
 from model import create_model
 from langchain_core.messages.human import HumanMessage
