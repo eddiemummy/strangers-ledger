@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.DS_Store
+
+# Virtual env
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+.streamlit/*.yaml
+
+# App data
+books_db.json
+reading_recommendations.txt
+covers/
