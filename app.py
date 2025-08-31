@@ -63,8 +63,8 @@ def _ensure_defaults(book: Dict[str, Any]) -> Dict[str, Any]:
         merged["status"] = "read"
     return merged
 
-st.set_page_config(page_title="📚 The Stranger's Ledger", layout="wide")
-st.title("📚 The Stranger's Ledger — Reading Tracker & Recommendations")
+st.set_page_config(page_title="The Stranger's Ledger", layout="wide")
+st.title("The Stranger's Ledger — Reading Tracker & Recommendations")
 
 with st.sidebar:
     st.subheader("🔐 Admin Login")
@@ -403,4 +403,3 @@ Rules:
                     st.error(f"Error: {e}")
 
 st.markdown("---")
-st.caption("📚 Crafted by a Reader-Friendly LLM Assistant — The Stranger's Ledger")
